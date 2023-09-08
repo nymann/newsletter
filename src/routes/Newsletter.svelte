@@ -1,41 +1,41 @@
 <script>
+        import { draw } from "svelte/transition";
+        import { quintOut } from "svelte/easing";
         import { onMount } from "svelte";
-        let arrow_head;
-        let arrow_tail;
-        let swirl_1;
-        let swirl_2;
+        let isVisible = false;
+        let targetDiv;
 
+        const observerOptions = {
+                root: null,
+                rootMargin: "0px",
+                threshold: 0.5,
+        };
+
+        const handleIntersection = (entries, observer) => {
+                entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                                console.log(new Date());
+                                isVisible = true;
+                        } else {
+                                isVisible = false;
+                        }
+                });
+        };
         onMount(() => {
-                function animatePath(path, duration) {
-                        const length = path.getTotalLength();
-                        path.style.strokeDasharray = length;
-                        path.style.strokeDashoffset = length;
-                        path.getBoundingClientRect();
-                        path.style.transition = `stroke-dashoffset ${duration}s ease-in-out`;
-                        path.style.strokeDashoffset = "0";
-                }
-
-                swirl_2.style.visibility = "hidden";
-                animatePath(swirl_1, 0.5);
-                arrow_head.style.visibility = "hidden";
-                arrow_tail.style.visibility = "hidden";
-                setTimeout(() => {
-                        swirl_2.style.visibility = "visible";
-                        animatePath(swirl_2, 0.5);
-                        arrow_tail.style.visibility = "visible";
-                        animatePath(arrow_tail, 1);
-                }, 400);
-
-                setTimeout(() => {
-                        arrow_head.style.visibility = "visible";
-                        animatePath(arrow_head, 0.5);
-                }, 1300);
+                isVisible = true;
+                const observer = new IntersectionObserver(
+                        handleIntersection,
+                        observerOptions
+                );
+                observer.observe(targetDiv);
         });
 </script>
 
-<div class="container">
+<div class="container" bind:this={targetDiv}>
         <p class="cta">
-                Want Spotify Design updates sent straight to your
+                Want Spotify Design updates
+                <br />
+                sent straight to your
                 <span>
                         <span class="stroke"
                                 ><svg
@@ -48,14 +48,24 @@
                                                 stroke-linecap="round"
                                                 stroke-linejoin="round"
                                                 stroke-width="2"
-                                                ><path
-                                                        bind:this={swirl_1}
-                                                        d="M105 10C28-9-29 40 34 56c62 16 91-29 66-29"
-                                                /><path
-                                                        bind:this={swirl_2}
-                                                        d="M109 16C82-20-56 21 30 55s105-27 75-45"
-                                                /></g
-                                        ></svg
+                                        >
+                                                {#if isVisible}
+                                                        <path
+                                                                in:draw={{
+                                                                        duration: 1000,
+                                                                        easing: quintOut,
+                                                                }}
+                                                                d="M105 10C28-9-29 40 34 56c62 16 91-29 66-29"
+                                                        /><path
+                                                                in:draw={{
+                                                                        delay: 300,
+                                                                        duration: 1000,
+                                                                        easing: quintOut,
+                                                                }}
+                                                                d="M109 16C82-20-56 21 30 55s105-27 75-45"
+                                                        />
+                                                {/if}
+                                        </g></svg
                                 >
                                 <svg
                                         class="arrow"
@@ -67,14 +77,25 @@
                                                 stroke-linecap="round"
                                                 stroke-linejoin="round"
                                                 stroke-width="1.4"
-                                                ><path
-                                                        bind:this={arrow_head}
-                                                        d="M154 21c6-2 13-4 23 0-13-5-16-8-18-15"
-                                                /><path
-                                                        bind:this={arrow_tail}
-                                                        d="M14 28c29-22 101-5 104 9 1 7-18 7 0-12s53-6 53-6"
-                                                /></g
-                                        ></svg
+                                        >
+                                                {#if isVisible}
+                                                        <path
+                                                                in:draw={{
+                                                                        duration: 1500,
+                                                                        delay: 1500,
+                                                                        easing: quintOut,
+                                                                }}
+                                                                d="M154 21c6-2 13-4 23 0-13-5-16-8-18-15"
+                                                        /><path
+                                                                in:draw={{
+                                                                        delay: 500,
+                                                                        duration: 1000,
+                                                                        easing: quintOut,
+                                                                }}
+                                                                d="M14 28c29-22 101-5 104 9 1 7-18 7 0-12s53-6 53-6"
+                                                        />
+                                                {/if}
+                                        </g></svg
                                 >
                         </span>
                         <span> inbox</span>

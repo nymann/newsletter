@@ -17,6 +17,20 @@
 <style>
         .container {
                 display: grid;
-                grid-template-rows: 200px auto;
+                grid-template-rows: 800px auto;
+                background: salmon;
+                color: white;
+                font-family: "CircularSpotifyText", -apple-system,
+                        BlinkMacSystemFont, sans-serif;
+        }
+        .meme {
+                display: grid;
+                justify-content: center;
+                align-content: center;
+        }
+        p {
+                font-size: 40px;
+                font-weight: 600;
+                text-align: center;
         }
 </style>
