@@ -8,17 +8,12 @@
         const observerOptions = {
                 root: null,
                 rootMargin: "0px",
-                threshold: 0.5,
+                threshold: 0.7,
         };
 
         const handleIntersection = (entries, observer) => {
                 entries.forEach((entry) => {
-                        if (entry.isIntersecting) {
-                                console.log(new Date());
-                                isVisible = true;
-                        } else {
-                                isVisible = false;
-                        }
+                        isVisible = entry.isIntersecting;
                 });
         };
         onMount(() => {
@@ -81,7 +76,7 @@
                                                 {#if isVisible}
                                                         <path
                                                                 in:draw={{
-                                                                        duration: 1500,
+                                                                        duration: 1000,
                                                                         delay: 1500,
                                                                         easing: quintOut,
                                                                 }}
